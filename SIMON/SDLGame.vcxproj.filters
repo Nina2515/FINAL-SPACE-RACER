@@ -23,6 +23,9 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Objects\ColourBlock.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="Source\EventHandler.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
@@ -31,6 +34,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Objects\ColourBlock.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Objects\ObjData.h">
       <Filter>Source Files\Objects</Filter>
     </ClInclude>
@@ -39,9 +45,6 @@
     </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GameError.h">
-      <Filter>Source Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
