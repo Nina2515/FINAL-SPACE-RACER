@@ -3,37 +3,176 @@
 #include <ctime>
 // creating a basic gameobject
 #include "Objects/ColourBlock.h"
+#include "../GameError.h"
 #include "../Graphics.h"
+#include <iostream>
+
+
 
 // GameState
 bool GameRunning = true;
+
+
+
+//Recursion
+
+int GetNumMeteors(Meteor* meteor, int NumMeteor = 200) {
+
+	int TotalMeteors = 200;
+
+	if (meteor->M != nullptr) {
+
+		TotalMeteors += GetNumMeteors(meteor->M);
+		TotalMeteors += meteor + TotalMeteors; 
+	}
+
+	return TotalMeteors;
+
+}
 
 // argc and argv here are command line parameters passed to the program when running the program. 
 // we won't actually use them but our 2D Graphics Library requires the main setup like this.
 // Argc: the number of arguments pass
 // argv[] : a char array of each of the params passed in ( each space is a new param)
-int main( int argc, char *argv[] )
+
+
+
+// Data of the first player 
+int names() {
+	cout << "Please enter a name for your first character:" << endl;
+
+	string player1firstname;
+	getline(cin, player1firstname);
+
+
+	ofstream outFile;
+	outFile.open("CharacterData/player1firstname.txt");
+
+	outFile << player1firstname << endl;
+	outFile.close();
+
+
+	ifstream inFile;
+
+	cout << "The name is: " << player1firstname << endl;
+
+
+	string player1Lastname;
+
+	ifstream input("CharacterData/palyer1lastname.txt");
+	getline(input, player1Lastname, '\n');
+
+	ofstream oFile("CharacterData/player1Fullname.txt");
+	oFile << player1firstname << " " << player1Lastname << endl;
+
+	oFile.close();
+
+	ifstream onFile;
+
+	cout << "The lastname is: " << player1Lastname << endl;
+
+	player1firstname.append(player1Lastname);
+
+	//========================================
+
+	// Data of the second player 
+
+	cout << "Please enter a name for your second character:" << endl;
+
+	string player2firstname;
+	getline(cin, player2firstname);
+
+
+	ofstream outFile;
+	outFile.open("CharacterData/player2firstname.txt");
+
+	outFile << player2firstname << endl;
+	outFile.close();
+
+
+	ifstream inFile;
+
+	cout << "The name is: " << player2firstname << endl;
+
+
+	string player2Lastname;
+
+	ifstream input("CharacterData/player2lastname.txt");
+	getline(input, player2Lastname, '\n');
+
+	ofstream oFile("CharacterData/playere2Fullname.txt");
+	oFile << player2firstname << " " << player2Lastname << endl;
+
+	oFile.close();
+
+	ifstream onFile;
+
+	cout << "The lastname is: " << player2Lastname << endl;
+
+	player2firstname.append(player2Lastname);
+
+
+	return(0);
+
+}
+
+//Exception
+
+int GameError(string player1, string player2) {
+
+	if (player1 == "" || player2 == "") {
+		throw "Game error";
+	}
+
+	return(0);
+}
+
+
+int main(int argc, char* argv[])
 {
+
+
+	cout << "Put players position ";
+
+	string players[2];
+	cin >> players[0] >> players[1];
+
+	try {
+
+		GameError(players[0], players[1]);
+	}
+	catch (string) {
+
+		cout << "There was an error, the game will close\n\n";
+	}
+
+	catch (const char* error) {
+
+		cout << error << "\n\n";
+	}
+	catch (error GamesError) {
+
+		cout << GamesError.Error << "\n\n";
+	}
+
+
+
+
 	srand(time(NULL));
+
+	
 
 	if (!Graphics::Init())
 	{
 		return false;
 	}
 
-	const int MAX_PATTERN_SIZE = 9;
-	const int BOARDSIZE = 9;
+	
 
-	int indexOrder[MAX_PATTERN_SIZE];
-
-	for (int i = 0; i < MAX_PATTERN_SIZE; i++)
-	{
-		indexOrder[i] = rand() % BOARDSIZE;
-	}
-	int lvl = 1;
+	
 
 	// 2D array
-	ColourBlock ColourBlock[3][3];
+	
 
 	// where in the animation or entry is the current index
 	int currentPatternIndex = 0;
@@ -48,45 +187,10 @@ int main( int argc, char *argv[] )
 
 		// handle button events
 		GameRunning = EventHandler::Update();
-
-		for (int x = 0; x < 3; x++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				// sets location and size
-				int xStart = 50 + (50 * x) + (10 * x + 1);
-				int yStart = 50 + (50 * y) + (10 * y + 1);
-				int width = 50;
-				int height = 50;
-
-				ColourBlock[x][y].Init(xStart, yStart, width, height);
-
-				// rgb values from hexadecimal, full colour = 0xFF no colour = 0x00
-				ColourBlock[x][y].SetColor(0xFF, 0x0F, 0x00);
-
-				// does nothing right now, but in the future may...
-				ColourBlock[x][y].Update();
-
-				// Update the drawn paddles
-				if (isAnimating && !isBlankFrame)
-				{
-					bool filledInside = indexOrder[currentPatternIndex] == x + y * 3;
-
-					if (filledInside) // filled inside
-					{
-						ColourBlock[x][y].SetColor(0x00, 0x0FF, 0x00);
-					}
-
-					ColourBlock[x][y].Draw(filledInside);
-				}
-				else
-				{
-					ColourBlock[x][y].Draw();
-				}
-
-				Graphics::DrawText("FINAL - Space Racer", 40,0, 200, 50);
-			}
-		}
+		
+		Graphics::DrawText("FINAL - Space Racer", 200,0, 200, 50);
+			
+		
 
 		// apply the changes to the screen 
 		Graphics::EndRender();
@@ -95,26 +199,12 @@ int main( int argc, char *argv[] )
 
 		SDL_Delay(500);
 
-		if (isAnimating && !isBlankFrame)
-		{
-			currentPatternIndex++;
-			if (currentPatternIndex >= MAX_PATTERN_SIZE ||currentPatternIndex >= currentPatternSize)
-			{
-				// loop for now
-				currentPatternIndex = 0;
-				SDL_Delay(500);
-				currentPatternSize++;
-
-				if (currentPatternSize >= MAX_PATTERN_SIZE)
-				{
-					lvl++;
-					isAnimating = false;
-				}
-			}
-		}
+		
+		
 	}
+	
 
-	//close off the SDL window
+	close off the SDL window
 	SDL_Quit();
 
 	return true;

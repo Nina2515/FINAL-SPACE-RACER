@@ -24,12 +24,12 @@ bool EventHandler::Update()
 		{
 		case SDLK_w:
 		{
-			SetButton(GameEvents::W_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			SetButton(GameEvents::LEFT_PRESSED, currEvents.key.type == SDL_KEYDOWN);
 			break;
 		}
 		case SDLK_s:
 		{
-			SetButton(GameEvents::S_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			SetButton(GameEvents::RIGHT_PRESSED, currEvents.key.type == SDL_KEYDOWN);
 			break;
 		}
 		case SDLK_UP:
